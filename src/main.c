@@ -19,7 +19,7 @@ int main() {
     printf("You entered: %s\n", buffer); 
     
     // returns a pointer to the first token
-    Token* parse_tree = parse(buffer);
+    Expr* parse_tree = parse(buffer);
       
     char* output = eval(parse_tree);
     size_t len = strlen(output); 
