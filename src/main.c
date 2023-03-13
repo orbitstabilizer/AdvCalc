@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h> 
 #include "../include/parser.h"
 #include "../include/executor.h"
 
@@ -13,7 +14,7 @@ int main() {
   while (true) {
     printf("> ");
     // TODO: Fix buffer overflow
-    if(fgets(buffer, BUFFER_SIZE, stdin) == NULL)
+    if(fgets(buffer, BUFFER_SIZE+1, stdin) == NULL)
       break;
     printf("You entered: %s\n", buffer); 
     
@@ -21,8 +22,8 @@ int main() {
     Token* parse_tree = parse(buffer);
       
     char* output = eval(parse_tree);
-    
-    if (output){
+    size_t len = strlen(output); 
+    if(output){
       printf("%s\n", output);
     }
   }
