@@ -25,11 +25,11 @@ long get_var(char *name){
   return atol(value_str);
 }
 
-
+/*
 int main(){
   declare_var("a");
   set_var("a", 31);
   printf("Value of a is %ld\n", get_var("a"));
   return 0;
 }
-
+*/
