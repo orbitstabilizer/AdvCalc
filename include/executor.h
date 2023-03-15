@@ -1,3 +1,8 @@
+#ifndef EXECUTOR_H
+#define EXECUTOR_H
+
 #include "../include/parser.h"
 
-char* eval(Token* parse_tree);
+char* eval(Expr* parse_tree);
+
+#endif

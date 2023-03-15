@@ -1,12 +1,20 @@
-#include <stdint.h>
+#ifndef PARSER_H
+#define PARSER_H
+
+#include <stddef.h>
 #include <stdbool.h>
-#include <ctype.h>
-#include <string.h>
-#include <stdlib.h>
 
+typedef struct Expr Expr;
+struct Expr{
+    Expr* expr_l;
+    Expr* expr_r;
+    char* op;
+    char* value;
+    int value_length;
 
-typedef struct Expr Expr; 
-size_t find(char* input, size_t size, char c);
+};
+
+int find(char* input, size_t size, char c);
 size_t strip(char* input, size_t size);
 bool is_inside_phrentesis(char* input, size_t size);
 Expr* parse_expr(char* input, size_t size); 
@@ -31,3 +39,5 @@ static const char* ops[] = {
 };
 
 static const size_t N_OPS = sizeof(ops) / sizeof(ops[0]);
+
+#endif
