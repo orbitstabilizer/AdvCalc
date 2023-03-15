@@ -1,16 +1,13 @@
-// TODO: operator and variable names can be the same
+
 #include "../include/parser.h"
+#include "../include/debug.h"
 
-struct Expr{
-    Expr* expr_l;
-    Expr* expr_r;
-    char* op;
-    char* value;
-    int value_length;
+#include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
 
-};
 
-size_t find(char* input, size_t size, char c){
+int find(char* input, size_t size, char c){
     for (size_t i = 0; i < size; i++){
         if(input[i] == c)
             return i;
@@ -87,8 +84,9 @@ Expr* parse_expr(char* input, size_t size){
     expr->expr_r = NULL;
     expr->op = NULL;
     expr->value = NULL;
-    
-    size_t operator_index = -1; // TODO: operator precedence
+   
+    TODO("Operator precedence");
+    int operator_index = -1; // size_t issue
     int pharentesis_level = 0;
 
     for (size_t i = 0; i < size; i++){
@@ -130,7 +128,7 @@ Expr* parse_func(char* input, size_t size){
         return NULL;
     }
 
-    size_t i = find(input, size, '(');
+    int i = find(input, size, '(');
     
     if(i == -1)
         return NULL;
@@ -161,7 +159,7 @@ Expr* extract_expression(char* input, size_t size){
         expr->value_length = size;
         return expr;
     }
-    // TODO: error handling
+    TODO("Error handling");
     return NULL;
 }
 
