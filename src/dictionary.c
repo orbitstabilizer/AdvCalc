@@ -1,18 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../include/parser.h"
-#define UNIMPLEMENTED do{ printf("ERROR: not implemented at line : %d", __LINE__); exit(1); }while(0)
+#include "../include/dictionary.h"
 
 
 void declare_var(char *name){
   setenv(name, "0", 1); 
 }
 
-void set_var(char *name, int value){
+void set_var(char *name, long value){
   // int to string
   char value_str[10];
-  sprintf(value_str, "%d", value);
+  sprintf(value_str, "%ld", value);
   setenv(name, value_str, 1);
 }
 
