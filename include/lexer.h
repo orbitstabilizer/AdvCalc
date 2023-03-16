@@ -66,7 +66,7 @@ Lexer *lexer_new(char *input, size_t input_len);
 void lexer_free(Lexer *lexer);
 void print_lex(Lexer *lexer);
 void lexer_next(Lexer *lexer);
-Token* next_token(char *source, size_t length);
+// Token* next_token(char *source, size_t length);
 bool parseLong(const char *str, long *val);
 
 #endif
