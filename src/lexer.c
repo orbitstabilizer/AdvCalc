@@ -2,6 +2,18 @@
 #include "../include/debug.h"
 
 
+bool parseLong(const char *str, long *val){
+    char *temp;
+    bool rc = true;
+    errno = 0;
+    *val = strtol(str, &temp, 0);
+
+    if (temp == str || *temp != '\0' ||
+        ((*val == LONG_MIN || *val == LONG_MAX) && errno == ERANGE))
+        rc = false;
+
+    return rc;
+}
 
 Lexer *lexer_new(char *input, size_t input_len){
     Lexer *lexer =  malloc(sizeof(Lexer));
@@ -43,10 +55,15 @@ void init_token(Token *token, TokenType type, long value, size_t value_len, char
         char sub_str[value_len + 1];
         strncpy(sub_str, start, value_len);
         sub_str[value_len] = '\0';
-        TODO("Check if it is a valid number");
-        token->value = strtol(sub_str, NULL, 10);
+        long val;
+        if (parseLong(sub_str, &val)){
+            token->value = val;
+        }else{
+            token->type = TOKEN_UNKNOWN;
+        }
     }
 }
+
 
 
 void lexer_next(Lexer *lexer){
@@ -63,6 +80,7 @@ void lexer_next(Lexer *lexer){
             c = lexer->input[lexer->cur_pos];
         }
     }
+    bool MATCHED = true;
     switch (c){
         case '+':
             init_token(token, TOKEN_PLUS, 0, 1, &lexer->input[lexer->cur_pos]);
@@ -82,9 +100,79 @@ void lexer_next(Lexer *lexer){
         case '=':
             init_token(token, TOKEN_EQ, 0, 1, &lexer->input[lexer->cur_pos]);
             break;
+        case '&':
+            init_token(token, TOKEN_AND, 0, 1, &lexer->input[lexer->cur_pos]);
+            break;
+        case '|':
+            init_token(token, TOKEN_OR, 0, 1, &lexer->input[lexer->cur_pos]);
+            break;
+        case ',':
+            init_token(token, TOKEN_COMMA, 0, 1, &lexer->input[lexer->cur_pos]);
+            break;
+        default:
+            MATCHED = false;
     }
+    if (MATCHED){
+        lexer->cur_pos++;
+        lexer->cur_token++;
+        return;
+    }
+
+    if (c == '%'){
+        init_token(token, TOKEN_COMMENT, 0, lexer->input_len - lexer->cur_pos, &lexer->input[lexer->cur_pos]);
+        lexer->cur_pos = lexer->input_len;
+        lexer->cur_token++;
+        return;
+
+    }
+    //  xor, ls, rs, not, lr, rr
+    if (c == 'l' && lexer->cur_pos <= lexer->input_len - 2 && !isalpha( lexer->input[lexer->cur_pos +2] )){
+        if (lexer->input[lexer->cur_pos + 1] == 's'){
+            init_token(token, TOKEN_LS, 0, 2, &lexer->input[lexer->cur_pos]);
+            lexer->cur_pos += 2;
+            lexer->cur_token++;
+            return;
+        }else if (lexer->input[lexer->cur_pos + 1] == 'r'){
+            init_token(token, TOKEN_LR, 0, 2, &lexer->input[lexer->cur_pos]);
+            lexer->cur_pos += 2;
+            lexer->cur_token++;
+            return;
+        }
+    }
+    else if (c== 'r' && lexer->cur_pos <= lexer->input_len - 2 && !isalpha( lexer->input[lexer->cur_pos +2] )){
+        if (lexer->input[lexer->cur_pos + 1] == 's'){
+            init_token(token, TOKEN_RS, 0, 2, &lexer->input[lexer->cur_pos]);
+            lexer->cur_pos += 2;
+            lexer->cur_token++;
+            return;
+        }else if (lexer->input[lexer->cur_pos + 1] == 'r'){
+            init_token(token, TOKEN_RR, 0, 2, &lexer->input[lexer->cur_pos]);
+            lexer->cur_pos += 2;
+            lexer->cur_token++;
+            return;
+        }
+    }
+    else if (c == 'x' && lexer->cur_pos <= lexer->input_len - 3 && !isalpha( lexer->input[lexer->cur_pos +2] )){
+        if (lexer->input[lexer->cur_pos + 1] == 'o' && lexer->input[lexer->cur_pos + 2] == 'r'){
+            init_token(token, TOKEN_XOR, 0, 3, &lexer->input[lexer->cur_pos]);
+            lexer->cur_pos += 3;
+            lexer->cur_token++;
+            return;
+        }
+    }
+    else if (c == 'n' && lexer->cur_pos <= lexer->input_len - 3 && !isalpha( lexer->input[lexer->cur_pos +3] )){
+        if (lexer->input[lexer->cur_pos + 1] == 'o' && lexer->input[lexer->cur_pos + 2] == 't'){
+            init_token(token, TOKEN_NOT, 0, 3, &lexer->input[lexer->cur_pos]);
+            lexer->cur_pos += 3;
+            lexer->cur_token++;
+            return;
+        }
+    }
+
+
+
     if (isalpha(c)){
-        int start = lexer->cur_pos;
+        size_t start = lexer->cur_pos;
         while (isalpha(c)){
             lexer->cur_pos++;
             c = lexer->input[lexer->cur_pos];
@@ -93,36 +181,36 @@ void lexer_next(Lexer *lexer){
         lexer->cur_token++;
         return;
     }else if (isdigit(c)){
-        int start = lexer->cur_pos;
+        size_t start = lexer->cur_pos;
         while (isdigit(c)){
             lexer->cur_pos++;
             c = lexer->input[lexer->cur_pos];
         }
         init_token(token, TOKEN_LITERAL, 0, lexer->cur_pos - start, &lexer->input[start]);
         lexer->cur_token++;
+
         return;
     }
-    else{
+    else {
+        init_token(token, TOKEN_UNKNOWN, 0, 1, &lexer->input[lexer->cur_pos]);
         lexer->cur_pos++;
         lexer->cur_token++;
+
     }
 
-    return;
 }
-/*
+
 int main(){
-    char *input = "abc = (a + b) - cenk*31 + 696789876789876789876787";
+    char *input = "XOR_var = lr(not(5) + 3*93580280895, 1) + lru % ajefo ";// = (a + b) - cenk*31 + 696789876789876789876787";
     size_t input_len = strlen(input);
     Lexer *lexer = lexer_new(input, input_len);
     do {
         lexer_next(lexer);
-   } while (lexer->token_list[lexer->cur_token -1].type != TOKEN_EOF);
-   
+    } while (lexer->token_list[lexer->cur_token -1].type != TOKEN_EOF);
+
     print_lex(lexer);
 
     lexer_free(lexer);
 
 }
-*/
-
 

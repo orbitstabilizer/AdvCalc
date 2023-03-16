@@ -8,6 +8,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdbool.h>
+#include <errno.h>
+#include <limits.h>
 
 
 typedef enum TokenType{
@@ -30,7 +33,6 @@ typedef enum TokenType{
     TOKEN_LR,
     TOKEN_RR,
     
-    TOKEN_WHITE_SPACE,
     TOKEN_EQ,
     TOKEN_COMMENT,
     TOKEN_EOF,
@@ -65,5 +67,6 @@ void lexer_free(Lexer *lexer);
 void print_lex(Lexer *lexer);
 void lexer_next(Lexer *lexer);
 Token* next_token(char *source, size_t length);
+bool parseLong(const char *str, long *val);
 
 #endif
