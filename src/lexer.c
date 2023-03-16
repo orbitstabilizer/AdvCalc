@@ -199,7 +199,7 @@ void lexer_next(Lexer *lexer){
     }
 
 }
-
+/*
 int main(){
     char *input = "XOR_var = lr(not(5) + 3*93580280895, 1) + lru % ajefo ";// = (a + b) - cenk*31 + 696789876789876789876787";
     size_t input_len = strlen(input);
@@ -213,4 +213,5 @@ int main(){
     lexer_free(lexer);
 
 }
+*/
 
