@@ -1,8 +1,24 @@
+#include <string.h>
 #include "../include/pro_parser.h"
 #include "../include/debug.h"
 
-Token* next(Token* tokens){
-    return (Token*)++tokens;
+Token** nextToken(Token** tokens);
+SyntaxNode* newSyntaxNode(SyntaxNodeType type);
+SyntaxNode* newTokenNode(Token** token);
+SyntaxTree* parse(Token* tokens);
+SyntaxNode* parse_expr(Token** tokens);
+SyntaxNode* parse_term(Token** tokens);
+SyntaxNode* parse_plus_minus(Token** tokens);
+SyntaxNode* parse_mul(Token** tokens);
+SyntaxNode* parse_primary(Token** tokens);
+SyntaxNode* parse_paren(Token** tokens);
+SyntaxNode* parse_var(Token** tokens);
+void printSyntaxNode(SyntaxNode* node, int depth);
+void printSyntaxTree(SyntaxTree* tree);
+
+Token** nextToken(Token** tokens){
+    ++(*tokens);
+    return tokens;
 }
 
 SyntaxNode* newSyntaxNode(SyntaxNodeType type){
@@ -15,7 +31,17 @@ SyntaxNode* newSyntaxNode(SyntaxNodeType type){
     return node;
 }
 
+
+SyntaxNode* newTokenNode(Token** token){
+    SyntaxNode* node = (SyntaxNode*)newSyntaxNode(TOKEN);
+    node->token = *token;
+    return node;
+}
+
 SyntaxTree* parse(Token* tokens){
+    
+    fprintf(stderr, "parsing...\n");
+
     SyntaxTree* tree = (SyntaxTree*)malloc(sizeof(SyntaxTree));
     tree->root = (SyntaxNode*)parse_expr(&tokens);
     return tree;
@@ -23,105 +49,132 @@ SyntaxTree* parse(Token* tokens){
 
 SyntaxNode* parse_expr(Token** tokens){
     if((*tokens)->type == TOKEN_EOF) return NULL;
-    return parse_paren(tokens);
+    return parse_term(tokens);
 }
 
+SyntaxNode* parse_term(Token** tokens){
+    
+    return parse_plus_minus(tokens);
+}
+
+SyntaxNode* parse_plus_minus(Token** tokens){
+    SyntaxNode* left = parse_mul(tokens);
+    while((*tokens)->type == TOKEN_PLUS || (*tokens)->type == TOKEN_MINUS){
+        
+        SyntaxNode* node = (SyntaxNode*)newSyntaxNode(BINOP);
+        
+        node->left = left;
+        node->mid = (SyntaxNode*)newTokenNode(tokens);
+        node->right = (SyntaxNode*)parse_mul(nextToken(tokens));
+        
+        left = node;
+    }
+    return left;
+}
+
+SyntaxNode* parse_mul(Token** tokens){
+    SyntaxNode* left = parse_primary(tokens);
+    while((*tokens)->type == TOKEN_STAR){
+        
+        SyntaxNode* node = newSyntaxNode(BINOP);
+        
+        node->left = (SyntaxNode*)left;
+        node->mid = (SyntaxNode*)newTokenNode(tokens);
+        node->right = (SyntaxNode*)parse_primary(nextToken(tokens));
+
+        left = node;
+    }
+    return left;
+}
+
+SyntaxNode* parse_primary(Token** tokens){
+    SyntaxNode* node = parse_paren(tokens);
+    if(node == NULL) return parse_var(tokens);
+    else return node;
+}
 
 SyntaxNode* parse_paren(Token** tokens){
     if((*tokens)->type == TOKEN_LEFT_PAREN){
-        ++*tokens;
 
         SyntaxNode* node = newSyntaxNode(PAREN);
-        node->left = parse_expr(tokens);
+        node->left = parse_expr(nextToken(tokens));
         
         if((*tokens)->type == TOKEN_RIGHT_PAREN){
-            ++*tokens;
+            nextToken(tokens);
         }
         else{
             node->type = ERROR;
             TODO("closing parenthesis error message");
-            error("Expected closing parenthesis"); 
+            // error("Expected closing parenthesis"); 
         }
 
         return node;
     }
-    else{
-        return parse_func(tokens);
-    }
-}
-
-SyntaxNode* parse_func(Token** tokens){
-    if((*tokens)->type == TOKEN_XOR || (*tokens)->type == TOKEN_LR || (*tokens)->type == TOKEN_RR || (*tokens)->type == TOKEN_LS || (*tokens)->type == TOKEN_RS){
-        UNIMPLEMENTED("parse_func");
-    }
-    else if((*tokens)->type == TOKEN_NOT){
-        UNIMPLEMENTED("parse_func");
-    }
-    else{
-        return parse_var(tokens);
-    }
+    return NULL;
 }
 
 SyntaxNode* parse_var(Token** tokens){
     if((*tokens)->type == TOKEN_IDENTIFIER || (*tokens)->type == TOKEN_LITERAL){
-        SyntaxNode* node = (SyntaxNode*)newTokenNode(tokens);
-        return parse_mul(++*tokens, node);
+        SyntaxNode* node = newTokenNode(tokens);
+        nextToken(tokens);
+        return node;
     }
     else{
-        TODO("unexpected token error message");
-        error("unexpected token"); 
         return NULL;
     }
 }
 
-SyntaxNode* parse_mul(Token** tokens, SyntaxNode* left){
-    while((*tokens)->type == TOKEN_STAR){
-        SyntaxNode* node = newSyntaxNode(BINOP);
-        node->left = (SyntaxNode*)left;
-        node->mid = (SyntaxNode*)newTokenNode(tokens);
-        node->right = (SyntaxNode*)parse_expr(++*tokens);
+void printSyntaxNode(SyntaxNode* node, int depth){
+    if(node == NULL) return;
+    for(int i = 0; i < depth; ++i){
+        fprintf(stderr, "-  ");
     }
-    return parse_plus_minus(tokens, left);
+    switch(node->type){
+        case TOKEN:
+            fprintf(stderr, "|__ TOKEN(\"");
+            for(size_t i = 0; i < node->token->length; ++i)
+                fprintf(stderr, "%c", node->token->start[i]);
+            fprintf(stderr, "\")\n");
+            break;
+        case BINOP:
+            fprintf(stderr, "|__ OPERATOR(%c)\n", node->mid->token->start[0]);
+            printSyntaxNode(node->left, depth + 1);
+            printSyntaxNode(node->right, depth + 1);
+            break;
+        case PAREN:
+            fprintf(stderr, "|__ PARENTHESIS\n");
+            printSyntaxNode(node->left, depth + 1);
+            break;
+        case ERROR:
+            fprintf(stderr, "ERROR\n");
+            break;
+        default:
+            fprintf(stderr, "UNKNOWN\n");
+            break;
+    };
+};
+
+void printSyntaxTree(SyntaxTree* tree){
+    fprintf(stderr, "printing syntax tree...\n");
+    printSyntaxNode(tree->root, 0);
 }
 
-SyntaxNode* parse_plus_minus(Token** tokens, SyntaxNode* left){
-    while((*tokens)->type == TOKEN_PLUS || (*tokens)->type == TOKEN_MINUS){
-        SyntaxNode* node = (SyntaxNode*)newSyntaxNode(BINOP);
-        node->left = (SyntaxNode*)left;
-        node->mid = (SyntaxNode*)newTokenNode(tokens);
-        node->right = (SyntaxNode*)parse_expr(++*tokens);
-    }
-    return parse_unary(tokens, left);
+void test(char* input){
+    size_t input_len = strlen(input);
+    Lexer *lexer = lexer_new(input, input_len);
+    do {
+        lexer_next(lexer);
+    } while (lexer->token_list[lexer->cur_token -1].type != TOKEN_EOF);
+
+    print_lex(lexer);
+
+    SyntaxTree* tree = (SyntaxTree*)parse(lexer->token_list);
+    printSyntaxTree(tree);
+
+    lexer_free(lexer);
 }
 
-// SyntaxNode* parse_and(Token** tokens, SyntaxNode* left){
-//     while((*tokens)->type == TOKEN_AND){
-//         SyntaxNode* node = newSyntaxNode(BINOP);
-//         node->left = left;
-//         node->mid = newTokenNode(tokens);
-//         node->right = parse_expr(++*tokens);
-//     }
-//     return parse_or(tokens, left);
-// }
-
-
-// SyntaxNode* parse_or(Token** tokens, SyntaxNode* left){
-//     while((*tokens)->type == TOKEN_OR){
-//         SyntaxNode* node = newSyntaxNode(BINOP);
-//         node->left = left;
-//         node->mid = newTokenNode(tokens);
-//         node->right = parse_expr(++*tokens);
-//     }
-//     return parse_unary(tokens, left);
-// }
-
-SyntaxNode* parse_unary(Token** tokens, SyntaxNode* left){
-    ++*tokens;
-    return left;
-}
-
-SyntaxNode* newTokenNode(Token** token){
-    SyntaxNode* node = (SyntaxNode*)newSyntaxNode(TOKEN);
-    node->token = *token;
-    return node;
+int main(){
+    char *input = "(a+b)*2*4+5*(a*a)";
+    test(input);
 }
