@@ -152,7 +152,7 @@ void lexer_next(Lexer *lexer){
             return;
         }
     }
-    else if (c == 'x' && lexer->cur_pos <= lexer->input_len - 3 && !isalpha( lexer->input[lexer->cur_pos +2] )){
+    else if (c == 'x' && lexer->cur_pos <= lexer->input_len - 3 && !isalpha( lexer->input[lexer->cur_pos +3] )){
         if (lexer->input[lexer->cur_pos + 1] == 'o' && lexer->input[lexer->cur_pos + 2] == 'r'){
             init_token(token, TOKEN_XOR, 0, 3, &lexer->input[lexer->cur_pos]);
             lexer->cur_pos += 3;
@@ -199,10 +199,9 @@ void lexer_next(Lexer *lexer){
     }
 
 }
-
-/*    TEST
+/*
 int main(){
-    char *input = "XOR_var = lr(not(5) + 3*93580280895, 1) + lru % ajefo ";// = (a + b) - cenk*31 + 696789876789876789876787";
+    char *input = "xor(1,2)";//"XOR_var = lr(not(5) + 3*93580280895, 1) + lru % ajefo ";// = (a + b) - cenk*31 + 696789876789876789876787";
     size_t input_len = strlen(input);
     Lexer *lexer = lexer_new(input, input_len);
     do {
