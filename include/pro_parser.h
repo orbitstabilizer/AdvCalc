@@ -7,7 +7,8 @@ typedef enum SyntaxNodeType{
   BINOP,
   UNOP,
   PAREN,
-  TOKEN
+  TOKEN,
+  ERROR
 } SyntaxNodeType;
 
 
