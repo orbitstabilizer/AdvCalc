@@ -13,6 +13,8 @@ SyntaxNode* parse_mul(Token** tokens);
 SyntaxNode* parse_primary(Token** tokens);
 SyntaxNode* parse_paren(Token** tokens);
 SyntaxNode* parse_var(Token** tokens);
+void free_syntax_node(SyntaxNode* node);
+void free_syntax_tree(SyntaxTree* tree);
 void printSyntaxNode(SyntaxNode* node, int depth);
 void printSyntaxTree(SyntaxTree* tree);
 
@@ -124,6 +126,20 @@ SyntaxNode* parse_var(Token** tokens){
     }
 }
 
+void free_syntax_node(SyntaxNode* node){
+    if(node == NULL) return;
+    free_syntax_node(node->left);
+    free_syntax_node(node->mid);
+    free_syntax_node(node->right);
+    free(node);
+}
+
+void free_syntax_tree(SyntaxTree* tree){
+    if(tree == NULL) return;
+    free_syntax_node(tree->root);
+    free(tree);
+}
+
 void printSyntaxNode(SyntaxNode* node, int depth){
     if(node == NULL) return;
     for(int i = 0; i < depth; ++i){
@@ -172,6 +188,7 @@ void test(char* input){
     printSyntaxTree(tree);
 
     lexer_free(lexer);
+    free_syntax_tree(tree);
 }
 
 int main(){
