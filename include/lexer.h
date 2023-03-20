@@ -41,6 +41,8 @@ typedef enum TokenType {
   TOKEN_COMMA,       // 19
 } TokenType;
 
+
+
 typedef struct Token Token;
 struct Token {
   TokenType type;

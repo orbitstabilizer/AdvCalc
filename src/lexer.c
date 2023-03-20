@@ -1,8 +1,31 @@
 #include "../include/lexer.h"
 #include "../include/debug.h"
-
+static const char *str_token_type[] = {
+  "TOKEN_UNKNOWN", 
+  "TOKEN_LITERAL",
+  "TOKEN_IDENTIFIER",
+  "TOKEN_STAR",
+  "TOKEN_PLUS",
+  "TOKEN_MINUS", 
+  "TOKEN_AND", 
+  "TOKEN_OR",  
+  "TOKEN_NOT", 
+  "TOKEN_XOR", 
+  "TOKEN_LS", 
+  "TOKEN_RS", 
+  "TOKEN_LR", 
+  "TOKEN_RR", 
+  "TOKEN_EQ",      
+  "TOKEN_COMMENT", 
+  "TOKEN_EOF",     
+  "TOKEN_LEFT_PAREN",  
+  "TOKEN_RIGHT_PAREN", 
+  "TOKEN_COMMA"
+};
 
 bool parseLong(const char *str, long *val){
+    while(*str == '0' && *(str+1) != '\0')
+        str++;
     char *temp;
     bool rc = true;
     errno = 0;
@@ -29,6 +52,8 @@ void lexer_free(Lexer *lexer){
     free(lexer);
 }
 
+
+
 void print_lex(Lexer *lexer){
     printf("Lexer{\n\tinput: `%s`\n\tcur_pos: %zu\n\tinput_len: %zu\n\tcur_token: %zu\n",
            lexer->input, lexer->cur_pos, lexer->input_len, lexer->cur_token);
@@ -39,8 +64,8 @@ void print_lex(Lexer *lexer){
         strncpy(sub_str, token->start, token->length);
         sub_str[token->length] = '\0';
 
-        printf("\t\tToken{\n\t\t\ttype: %d\n\t\t\tvalue: %ld\n\t\t\tlength: %zu\n\t\t\tstart: '%s'\n\t\t},\n",
-               token->type, token->value, token->length, sub_str);
+        printf("\t\tToken{\n\t\t\ttype: %s\n\t\t\tvalue: %ld\n\t\t\tlength: %zu\n\t\t\tstart: '%s'\n\t\t},\n",
+               str_token_type[token->type], token->value, token->length, sub_str);
     }
     printf("\t}\n");
     printf("}\n");
