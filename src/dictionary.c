@@ -80,6 +80,8 @@ void set_var(Dictionary *dict, char *name, long value){
 
 long get_var(Dictionary *dict, char *name){
   Chain* bin = get(dict, name);
+  if(name)
+    free(name);
   if(bin == NULL){
     // if varialbe is not declared 
     return 0;
