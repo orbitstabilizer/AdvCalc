@@ -16,7 +16,7 @@ bool parseLong(const char *str, long *val){
 }
 
 Lexer *lexer_new(char *input, size_t input_len){
-    Lexer *lexer =  malloc(sizeof(Lexer));
+    Lexer *lexer =  (Lexer*) malloc(sizeof(Lexer));
     lexer->input = input;
     lexer->cur_pos = 0;
     lexer->input_len = input_len;
