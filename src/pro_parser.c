@@ -146,14 +146,15 @@ SyntaxNode *parse_func(Token **tokens) {
       node->right = temp->left->right;
       temp->left->left = NULL;
       temp->left->right = NULL;
-      free_syntax_node(temp->left);
+      free_syntax_node(temp);
     } else {
       node->type = ERROR;
       free_syntax_node(temp);
       LOG_ERROR("Invalid function call\n");
     }
     return node;
-  } else if ((*tokens)->type == TOKEN_NOT) {
+  } 
+  if ((*tokens)->type == TOKEN_NOT) {
     SyntaxNode *node = newSyntaxNode(UNOP);
     node->mid = newTokenNode(tokens);
 
