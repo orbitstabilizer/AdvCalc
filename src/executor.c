@@ -95,6 +95,7 @@ long eval_util(SyntaxNode *parent, Dictionary *dict) {
       size_t len = parent->token->length;
       char *var = malloc(sizeof(char) * (len + 1));
       strncpy(var, parent->token->start, len);
+      var[len] = '\0';
       return get_var(dict, var);
     }
   }
@@ -150,8 +151,8 @@ char* exec(char *input, Dictionary *dict, bool *err) {
       set_var(dict, assign, res);
     }else{
       output = malloc(sizeof(char) * 20);
-      sprintf(output, "%ld", res);
-    }
+      snprintf(output, 20, "%ld", res);
+      }
 
   }
 error:
