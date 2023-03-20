@@ -82,8 +82,6 @@ void set_var(Dictionary *dict, char *name, long value){
 
 long get_var(Dictionary *dict, char *name){
   Chain* bin = get(dict, name);
-  if(name)
-    free(name);
   if(bin == NULL){
     // if varialbe is not declared 
     return 0;
@@ -91,8 +89,7 @@ long get_var(Dictionary *dict, char *name){
   return bin->value;
 }
 
-/*
-int main(){
+/* int main(){
   // put("alis", "1");
   Dictionary* dict = new_dictionary();
   set_var(dict, "alis", 31);
@@ -142,5 +139,4 @@ int main(){
   free_dict(dict);
   return 0;
 
-  }
-*/
+  } */

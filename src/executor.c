@@ -96,7 +96,9 @@ long eval_util(SyntaxNode *parent, Dictionary *dict) {
       char *var = malloc(sizeof(char) * (len + 1));
       strncpy(var, parent->token->start, len);
       var[len] = '\0';
-      return get_var(dict, var);
+      long val = get_var(dict, var);
+      free(var);
+      return val;
     }
   }
   if (parent->type == BINOP || parent->type == UNOP) {
@@ -159,6 +161,7 @@ error:
   if(DEBUG && tree)print_syntax_tree(tree);
   if(lexer)lexer_free(lexer);
   if(tree)free_syntax_tree(tree);
+  if(assign)free(assign);
   *err = error;
   return output;
 }
