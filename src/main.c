@@ -18,17 +18,23 @@ int main() {
     TODO("Fix buffer overflow, when input is too long it carrys over to the next line");
     if(fgets(buffer, BUFFER_SIZE+1, stdin) == NULL)
       break;
-    bool error = false;
-    char* output = exec(buffer, dict, &error);
-
-    if(output){
-      printf("%s\n", output);
+    // int c;
+    // while ((c = getchar()) != '\n' && c != EOF) { }
+    char output[31];
+    int state = exec(dict,buffer,output);
+    switch (state) {
+      case 0:
+        printf("%s\n", output);
+        break;
+      case 2:
+        printf("Error!\n");
+        break;
+      default:
+        break;
     }
-    else if(error)
-      printf("Error!\n");
-    free(output);
   }
-  if(dict)free_dict(dict);
+  if(dict)
+    free_dict(dict);
   return 0;
 
 }
