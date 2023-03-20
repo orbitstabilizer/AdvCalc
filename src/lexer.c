@@ -80,6 +80,11 @@ void lexer_next(Lexer *lexer){
             c = lexer->input[lexer->cur_pos];
         }
     }
+    if (c == '\0' || c == EOF){
+        init_token(token, TOKEN_EOF, 0, 0,  NULL);
+        lexer->cur_token++;
+        return;
+    }
     bool MATCHED = true;
     switch (c){
         case '+':
@@ -119,7 +124,7 @@ void lexer_next(Lexer *lexer){
     }
 
     if (c == '%'){
-        init_token(token, TOKEN_COMMENT, 0, lexer->input_len - lexer->cur_pos, &lexer->input[lexer->cur_pos]);
+        init_token(token, TOKEN_EOF, 0, lexer->input_len - lexer->cur_pos, &lexer->input[lexer->cur_pos]);
         lexer->cur_pos = lexer->input_len;
         lexer->cur_token++;
         return;
