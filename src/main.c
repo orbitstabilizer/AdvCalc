@@ -2,7 +2,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h> 
-#include "../include/parser.h"
 #include "../include/executor.h"
 #include "../include/debug.h"
 
@@ -13,25 +12,23 @@
 int main() {
   // plus 1 for null terminator 
   char buffer[BUFFER_SIZE+1];
+  Dictionary *dict = new_dictionary();
   while (true) {
     printf("> ");
     TODO("Fix buffer overflow, when input is too long it carrys over to the next line");
     if(fgets(buffer, BUFFER_SIZE+1, stdin) == NULL)
       break;
-    printf("You entered: %s\n", buffer); 
-    
-    // returns a pointer to the first token
-    size_t buffer_len = strlen(buffer); 
-    TODO("operator and variable names can be the same");
-    Expr* parse_tree = parse_expr(buffer, buffer_len);
-      
-    char* output = eval(parse_tree);
-    size_t len = strlen(output); 
+    bool error = false;
+    char* output = exec(buffer, dict, &error);
+
     if(output){
       printf("%s\n", output);
-      printf("len: %zu\n", len);
     }
+    else if(error)
+      printf("Error!\n");
+    free(output);
   }
+  if(dict)free_dict(dict);
   return 0;
 
 }
