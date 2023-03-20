@@ -21,14 +21,14 @@ SyntaxNode *newSyntaxNode(SyntaxNodeType type) {
 }
 
 SyntaxNode *newTokenNode(Token **token) {
-  SyntaxNode *node = (SyntaxNode *)newSyntaxNode(TOKEN);
+  SyntaxNode *node = newSyntaxNode(TOKEN);
   node->token = *token;
   return node;
 }
 
 SyntaxTree *parse(Token *tokens) {
   SyntaxTree *tree = (SyntaxTree *)malloc(sizeof(SyntaxTree));
-  tree->root = (SyntaxNode *)parse_expr(&tokens);
+  tree->root = parse_expr(&tokens);
   return tree;
 }
 
@@ -51,11 +51,11 @@ SyntaxNode *parse_comma(Token **tokens) {
 
   while ((*tokens)->type == TOKEN_COMMA) {
 
-    SyntaxNode *node = (SyntaxNode *)newSyntaxNode(BINOP);
+    SyntaxNode *node = newSyntaxNode(ERROR);
 
     node->left = left;
-    node->mid = (SyntaxNode *)newTokenNode(tokens);
-    node->right = (SyntaxNode *)parse_or(nextToken(tokens));
+    node->mid = newTokenNode(tokens);
+    node->right = parse_or(nextToken(tokens));
 
     left = node;
   }
@@ -68,11 +68,11 @@ SyntaxNode *parse_or(Token **tokens) {
 
   while ((*tokens)->type == TOKEN_OR) {
 
-    SyntaxNode *node = (SyntaxNode *)newSyntaxNode(BINOP);
+    SyntaxNode *node = newSyntaxNode(BINOP);
 
     node->left = left;
-    node->mid = (SyntaxNode *)newTokenNode(tokens);
-    node->right = (SyntaxNode *)parse_and(nextToken(tokens));
+    node->mid = newTokenNode(tokens);
+    node->right = parse_and(nextToken(tokens));
 
     left = node;
   }
@@ -84,11 +84,11 @@ SyntaxNode *parse_and(Token **tokens) {
 
   while ((*tokens)->type == TOKEN_AND) {
 
-    SyntaxNode *node = (SyntaxNode *)newSyntaxNode(BINOP);
+    SyntaxNode *node = newSyntaxNode(BINOP);
 
     node->left = left;
-    node->mid = (SyntaxNode *)newTokenNode(tokens);
-    node->right = (SyntaxNode *)parse_plus_minus(nextToken(tokens));
+    node->mid = newTokenNode(tokens);
+    node->right = parse_plus_minus(nextToken(tokens));
 
     left = node;
   }
@@ -101,11 +101,11 @@ SyntaxNode *parse_plus_minus(Token **tokens) {
 
   while ((*tokens)->type == TOKEN_PLUS || (*tokens)->type == TOKEN_MINUS) {
 
-    SyntaxNode *node = (SyntaxNode *)newSyntaxNode(BINOP);
+    SyntaxNode *node = newSyntaxNode(BINOP);
 
     node->left = left;
-    node->mid = (SyntaxNode *)newTokenNode(tokens);
-    node->right = (SyntaxNode *)parse_mul(nextToken(tokens));
+    node->mid = newTokenNode(tokens);
+    node->right = parse_mul(nextToken(tokens));
 
     left = node;
   }
@@ -120,9 +120,9 @@ SyntaxNode *parse_mul(Token **tokens) {
 
     SyntaxNode *node = newSyntaxNode(BINOP);
 
-    node->left = (SyntaxNode *)left;
-    node->mid = (SyntaxNode *)newTokenNode(tokens);
-    node->right = (SyntaxNode *)parse_primary(nextToken(tokens));
+    node->left = left;
+    node->mid = newTokenNode(tokens);
+    node->right = parse_primary(nextToken(tokens));
 
     left = node;
   }
