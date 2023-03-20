@@ -5,7 +5,7 @@
 #include "../include/dictionary.h"
 #include "../include/lexer.h"
 #undef DEBUG
-#define DEBUG 0
+#define DEBUG 1
 
 #define RAISE_ERROR                                                            \
   do {                                                                         \
@@ -93,7 +93,7 @@ long eval_util(SyntaxNode *parent, Dictionary *dict) {
       return parent->token->value;
     } else if (parent->token->type == TOKEN_IDENTIFIER) {
       size_t len = parent->token->length;
-      char *var = malloc(sizeof(char) * (len + 1));
+      char *var = (char*)malloc(sizeof(char) * (len + 1));
       strncpy(var, parent->token->start, len);
       var[len] = '\0';
       long val = get_var(dict, var);
@@ -115,7 +115,10 @@ error:
   error = true;
   return 0;
 }
-
+#define RAISE_EXEC_ERROR                                                           \
+  do {                                                                         \
+    goto execution_error;                                                                \
+  } while (0)
 
 char* exec(char *input, Dictionary *dict, bool *err) {
   error = false;
@@ -132,11 +135,15 @@ char* exec(char *input, Dictionary *dict, bool *err) {
     if (type == TOKEN_UNKNOWN) {
       if(DEBUG)print_lex(lexer); 
       error = true;
-      RAISE_ERROR;
+      RAISE_EXEC_ERROR;
     }
     if (lexer->cur_token == 2 && type == TOKEN_EQ){
+      if (lexer->token_list[0].type != TOKEN_IDENTIFIER) {
+        error = true;
+        RAISE_EXEC_ERROR;
+      }
       size_t len = lexer->token_list[0].length;
-      assign = malloc(sizeof(char) * (len + 1));
+      assign = (char*) malloc(sizeof(char) * (len + 1));
       strncpy(assign, lexer->token_list[0].start, len);
       assign[len] = '\0';
     }
@@ -152,21 +159,22 @@ char* exec(char *input, Dictionary *dict, bool *err) {
     empty = true;
   }
   if (error) 
-    RAISE_ERROR;
+    RAISE_EXEC_ERROR;
   else {
+	print_lex(lexer);
     if (assign) {
       set_var(dict, assign, res);
     }
     else if (!empty){
-      output = malloc(sizeof(char) * 20);
+      output = (char*)malloc(sizeof(char) * 20);
       snprintf(output, 20, "%ld", res);
       }
 
   }
-error:
+execution_error:
   if(DEBUG && tree)print_syntax_tree(tree);
-  if(lexer)lexer_free(lexer);
   if(tree)free_syntax_tree(tree);
+  if(lexer)lexer_free(lexer);
   if(assign)free(assign);
   *err = error;
   return output;
