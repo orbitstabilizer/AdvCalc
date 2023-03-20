@@ -144,6 +144,9 @@ SyntaxNode *parse_func(Token **tokens) {
         temp->left->mid->token->type == TOKEN_COMMA) {
       node->left = temp->left->left;
       node->right = temp->left->right;
+      temp->left->left = NULL;
+      temp->left->right = NULL;
+      free_syntax_node(temp->left);
     } else {
       node->type = ERROR;
       free_syntax_node(temp);
@@ -159,9 +162,11 @@ SyntaxNode *parse_func(Token **tokens) {
         (temp->left->mid == NULL ||
          temp->left->mid->token->type != TOKEN_COMMA)) {
       node->left = temp->left;
+      temp->left = NULL;
+      free_syntax_node(temp);
     } else {
       node->type = ERROR;
-      free(temp);
+      free_syntax_node(temp);
       LOG_ERROR("Invalid function call\n");
     }
     return node;
