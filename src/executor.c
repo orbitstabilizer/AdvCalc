@@ -3,7 +3,7 @@
 #include "../include/debug.h"
 #include "../include/executor.h"
 #include "../include/dictionary.h"
-
+#include "../include/lexer.h"
 #undef DEBUG
 #define DEBUG 0
 
@@ -146,12 +146,18 @@ char* exec(char *input, Dictionary *dict, bool *err) {
   else
     tree = parse(lexer->token_list );
   long res = eval_util(tree->root, dict);
+  bool empty = false;
+  if (tree->root == NULL && !assign) {
+    error = false;
+    empty = true;
+  }
   if (error) 
     RAISE_ERROR;
   else {
     if (assign) {
       set_var(dict, assign, res);
-    }else{
+    }
+    else if (!empty){
       output = malloc(sizeof(char) * 20);
       snprintf(output, 20, "%ld", res);
       }
