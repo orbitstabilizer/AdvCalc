@@ -5,6 +5,8 @@
 
 Dictionary* new_dictionary(){
   Dictionary* dict = (Dictionary*) malloc(sizeof(Dictionary));
+  for (int i = 0; i < HASHSIZE; i++)
+    dict->hashtab[i] = NULL;
   return dict;
 }
 
