@@ -1,5 +1,10 @@
 #include "../include/lexer.h"
-#include "../include/debug.h"
+#include "../include/debug.h"/*
+ * Parse a long from a string
+ * str: string to parse
+ * val: pointer to long to store value
+ */
+static bool parseLong(const char *str, long *val);
 static const char *str_token_type[] = {
   "TOKEN_UNKNOWN", 
   "TOKEN_LITERAL",

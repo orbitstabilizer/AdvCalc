@@ -12,6 +12,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* Token types */
+
 typedef enum TokenType {
 
   TOKEN_UNKNOWN,    // 0
@@ -41,8 +43,12 @@ typedef enum TokenType {
   TOKEN_COMMA,       // 19
 } TokenType;
 
-
-
+/* Token struct
+ * type: type of token
+ * start: start location of token
+ * length: length of token
+ * value: value of token if it is a literal
+ */
 typedef struct Token Token;
 struct Token {
   TokenType type;
@@ -51,6 +57,13 @@ struct Token {
   long value;
 };
 
+/* Lexer struct
+ * input: input string
+ * cur_pos: current position in input string
+ * input_len: length of input string
+ * token_list: list of tokens
+ * cur_token: current token
+ */
 typedef struct Lexer Lexer;
 struct Lexer {
   char *input;
@@ -61,10 +74,30 @@ struct Lexer {
   size_t cur_token;
 };
 
+
+/* Create a new lexer
+ * input: input string
+ * input_len: length of input string
+ */
 Lexer *lexer_new(char *input, size_t input_len);
+
+
+/* Free a lexer
+ * lexer: lexer to free
+ */
 void lexer_free(Lexer *lexer);
+
+/* Prints the tokinized input
+ * lexer: lexer to print
+ */
 void print_lex(Lexer *lexer);
+
+/* Get the next token
+ * lexer: lexer to get token from
+ */
 void lexer_next(Lexer *lexer);
-bool parseLong(const char *str, long *val);
+
+
+
 
 #endif

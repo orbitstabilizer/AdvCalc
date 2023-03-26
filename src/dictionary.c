@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../include/dictionary.h"
+static Chain *put(Dictionary* dict, char *name, long value);
+static Chain *get(Dictionary* dict, char *s);
 
 Dictionary* new_dictionary(){
   Dictionary* dict = (Dictionary*) malloc(sizeof(Dictionary));
@@ -10,7 +12,7 @@ Dictionary* new_dictionary(){
   return dict;
 }
 
-/* hash: form hash value for string s */
+/* hash: polynomial hash for string s */
 unsigned hash(char *s)
 {
     unsigned hashval;

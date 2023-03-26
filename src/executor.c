@@ -3,7 +3,24 @@
 #include "../include/debug.h"
 #include "../include/dictionary.h"
 #include "../include/lexer.h"
-#include "../include/pro_parser.h"
+#include "../include/parser.h"
+
+
+
+static long str_to_long(char *str);
+static long add(long a, long b);
+static long sub(long a, long b);
+static long mul(long a, long b);
+static long b_and (long a, long b);
+static long b_or (long a, long b);
+static long b_xor (long a, long b);
+static long lshift(long a, long b);
+static long rshift(long a, long b);
+static long lrotate(long a, long b);
+static long rrotate(long a, long b);
+static long b_not(long a, long null);
+
+
 #undef DEBUG
 #define DEBUG 0
 
