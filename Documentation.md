@@ -1,8 +1,8 @@
+
 # AdvCalc
 Todo : add examples , using print for (dictionary, lexer, parser)
 Todo : proof read
 Todo : comment out parser.c, and add header to doc
-
 
 
 **AdvCalc** is an CLI calculator implemented in **c**. The application works as a Read-Execute-Print-Loop (REPL). 
@@ -11,19 +11,19 @@ Todo : comment out parser.c, and add header to doc
 To build the program, ensure **gcc** is intalled in your machine. Project has no dependencies other than the standard c library. 
 
 To compile the program from the source, run makefile from the top level directory:
-```Shell
+```bash
 make advcalc
 ```
 The default build target is already advcalc, running make without any argument works as well: 
-```Shell
+```bash
 make
 ```
 The executable produced is named **"advcalc"**, to start the program execute the binary directly:
-```Shell
+```bash
 ./advcalc
 ```
 If build process has gone smoothly you should see the following prompt:
-```Shell
+```bash
 ./advcalc
 > 
 ```
@@ -31,14 +31,17 @@ Now the calculator is ready to use.
 To exit the program input **"EOF"** (i.e. **"Ctrl + D"**).
 
 ## Program Interface
+
 ### Variables and Constants
 All the variables and constants are **64 bit** integers. 
 - Variable names are case sensitive.
 - Variable names can contain only uppercase and lowercase letters.
 - Variables with no previous assigned value are treated as 0.
 - Reserved words cannot be used as variable names (e.g. xor, not, ls, rs, rr, lr).
+
 ### Operators
 All the operations listed below work with **64 bit**  integers.
+
 #### Binary Arithmetic Operations
 AdvCalc supports the following binary infix arithmetic operations:
 
@@ -48,8 +51,10 @@ AdvCalc supports the following binary infix arithmetic operations:
 | $-$  | $a-b$  | Difference of $a$ and $b$  | 
 | $*$  | $a*b$  | Product of $a$ and $b$  | 
 
+
 #### Binary Bitwise Operations
 AdvCalc supports the following binary infix bitwise operations:
+
 | Operation | Use |  Description  |
 |---|---|---|
 | $\&$  | $a \& b$  | Bitwise AND of $a$ and $b$  |
@@ -58,12 +63,15 @@ AdvCalc supports the following binary infix bitwise operations:
 
 #### Unary Bitwise Operations
 The only unary bitwise operation supported is the bitwise NOT operation, it is used as a prefix operator (i.e. a function)):
+
 | Operation | Use |  Description  |
 |---|---|---|
 | $not(.)$  | $not(a)$  | Bitwise complement of $a$  |
 
+
 #### Other Bitwise Operations
 Following functions are supported for bitwise operations:
+
 | Operation | Use |  Description  |
 |---|---|---|
 | $xor(., .)$  | $xor(a, b)$  | Bitwise XOR of $a$ and $b$  |
@@ -72,8 +80,10 @@ Following functions are supported for bitwise operations:
 | $rr(., .)$  | $rr(a, b)$  | Bitwise right rotation of $a$ by $b$ bits  |
 | $rl(., .)$  | $rl(a, b)$  | Bitwise left rotation of $a$ by $b$ bits  |
 
+
 ### Expressions
 Expressions are evaluated in the following order, from highest to lowest precedence:
+
 1. Parenthesized expressions (i.e. expressions enclosed in **"("** and **")"**), and function calls.
 2. Multiplication (**"\*"**)
 3. Addition (**"+"**) and subtraction (**"-"**). The operations are left associative (i.e. $a - b + c$ is evaluated as $(a - b) + c$, not $a - (b + c)$).
@@ -99,13 +109,16 @@ Comments are supported in the calculator. Comments start with **"%"**. Everythin
 5
 ```
 
+
 ## Program Structure and Implementation 
-The program is implemented in **c**. The program has the following modules:
+**AdvCalc** is implemented in **c**. The program is composed of the following modules:
+
 - **main.c**: The main module of the program. It contains the main function and the REPL loop.
 - **lexer.c**: The lexer module. It contains the functions that tokenize the input string.
 - **parser.c**: The parser module. It contains the functions that parse the input string and convert it to an parse tree.
 - **executer.c**: The executer module. It contains the functions that execute the parse tree and evaluate the expression.
 - **dictionary.c**: The dictionary module. It contains hash table implementation used to store the variables.
+
 
 ### main.c
 The main module contains the main function and the REPL loop. The main function initializes the dictionary and starts the REPL loop. The REPL loop reads the input from the user, tokenizes it, parses it, and executes it. The REPL loop continues until the user inputs "Ctrl-d".
