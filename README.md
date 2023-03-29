@@ -886,11 +886,11 @@ Generated using `print_syntax_tree` :
     parser.c, we used address sanitizer stack trace. Other then this, we
     didn\'t encounter any major technical difficulty.
 -   For me the most difficult part was to wait for Atakan to push his
-    task. Most probably, I am just very impatent. (Yusuf)
+    task. Most probably, I am just very impatient. (Yusuf)
 
 **Q:** How to get a pdf version of the README.md ?
 
-* Eassy,
+* Easy,
 ```bash
 pandoc --pdf-engine=xelatex \
 	--highlight-style tango \
