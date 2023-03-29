@@ -263,7 +263,7 @@ void lexer_next(Lexer *lexer);
 
 \"parser.c\" implements the parser module. The output is a parse tree.
 Used grammar:
-```json
+```py
     <expr> = <term><eof> | <eof>
     <term> = <term><binop><term> | <primary> | (<term>)
     <primary> = <func> | <var>
@@ -514,7 +514,7 @@ unsigned hash(char *s);
 
 Generated using `print_lex` :
 
-``` json
+``` py
 Lexer{
     input: `rr(lr(ls(rs(xor(((x)), x) | z + y, 1), (((1)))), 1), 1) - qqq * not(not(10))`
     cur_pos: 76
@@ -835,7 +835,7 @@ Lexer{
 
 Generated using `print_syntax_tree` :
 
-``` json
+``` py
 |__ OPERATOR(-)
 -  |__ OPERATOR(r)
 -  -  |__ OPERATOR(l)
