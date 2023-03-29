@@ -5,6 +5,13 @@
 
 #undef DEBUG
 #define DEBUG 0
+
+static Token **nextToken(Token **tokens);
+static SyntaxNode *newSyntaxNode(SyntaxNodeType type);
+static SyntaxNode *newTokenNode(Token **token);
+static void free_syntax_node(SyntaxNode *node);
+static void print_syntax_node(SyntaxNode *node, int depth);
+
 Token **nextToken(Token **tokens) {
   ++(*tokens);
   return tokens;
