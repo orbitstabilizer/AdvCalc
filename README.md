@@ -13,7 +13,7 @@ works as a Read-Execute-Print-Loop (REPL).
 
 ## Build and Execution
 
-To build the program, ensure **gcc** is intalled in your machine.
+To build the program, ensure **gcc** is installed in your machine.
 Project has no dependencies other than the standard c library.
 
 To compile the program from the source, run makefile from the top level
@@ -44,16 +44,16 @@ If build process has gone smoothly you should see the following prompt:
 > 
 ```
 
-Now the calculator is ready to use. To exit the program input
+Now the calculator is ready to use. To exit the program, input
 **\"EOF\"** (i.e. **\"Ctrl + D\"**).
 
 ## Program Interface
 
 ### Variables and Constants
 
-All the variables and constants are **64 bit** integers.
+All the variables and constants are **64-bit** integers.
 
--   Variable names are case sensitive.
+-   Variable names are case-sensitive.
 -   Variable names can contain only uppercase and lowercase letters.
 -   Variables with no previous assigned value are treated as 0.
 -   Reserved words cannot be used as variable names (e.g. xor, not, ls,
@@ -61,7 +61,7 @@ All the variables and constants are **64 bit** integers.
 
 ### Operators
 
-All the operations listed below work with **64 bit** integers.
+All the operations listed below work with **64-bit** integers.
 
 #### Binary Arithmetic Operations
 
@@ -119,8 +119,8 @@ precedence:
 
 ### Assignment Statement
 
-Assignment is done using the **\"=\"** operator. The left hand side of
-the assignment must be a variable name. The right hand side can be any
+Assignment is done using the **\"=\"** operator. The left-hand side of
+the assignment must be a variable name. The right-hand side can be any
 valid expression.
 
 ``` Shell
@@ -132,7 +132,7 @@ valid expression.
 
 ### Comments
 
-Comments are supported in the calculator. Comments start with **\"%\"**.
+Comments are supported in the calculator. They start with **\"%\"**.
 Everything after the **\"%\"** is ignored by the calculator.
 
 ``` Shell
@@ -152,10 +152,10 @@ following modules:
 -   **lexer.c**: The lexer module. It contains the functions that
     tokenize the input string.
 -   **parser.c**: The parser module. It contains the functions that
-    parse the input string and convert it to an parse tree.
+    parse the input string and convert it to a parse tree.
 -   **executer.c**: The executer module. It contains the functions that
     execute the parse tree and evaluate the expression.
--   **dictionary.c**: The dictionary module. It contains hash table
+-   **dictionary.c**: The dictionary module. It contains a hash table
     implementation used to store the variables.
 
 ### main.c {#mainc}
@@ -167,7 +167,7 @@ executes it. The REPL loop continues until the user inputs \"Ctrl-d\".
 
 ### lexer.c {#lexerc}
 
-\"lexer.c\" implements the lexer module. The ouput is a stream of
+\"lexer.c\" implements the lexer module. The output is a stream of
 tokens.
 
 ``` c
@@ -435,7 +435,7 @@ int exec(Dictionary *dict, char *input, char *output);
 ### dictionary.c {#dictionaryc}
 
 This module implements a hash table to store the variables. The hash
-table handles collisions using seperate chaining.
+table handles collisions using separate chaining.
 
 ``` c
 #define HASHSIZE 31013 // a large prime number
@@ -869,8 +869,8 @@ Generated using `print_syntax_tree` :
 **Q:** Any improvements or extensions?
 
 -   It should be possible to create a template in the source code to
-    parse&lex arbitrary operations. For this we should make some updates
-    to make precedence and associaivity handling generic.
+    parse & lex arbitrary operations. For this, we should make some updates
+    to make precedence and associativity handling generic.
 
 **Q:** How does the parser work?
 
@@ -882,10 +882,10 @@ Generated using `print_syntax_tree` :
 
 **Q:** What difficulties did you encounter?
 
--   Not many, we spend a couple hours to fix a memory leak problem in
-    parser.c, we used address sanitizer stack trace. Other then this, we
+-   Not many, we spend a couple of hours to fix a memory leak problem in
+    parser.c, we used address sanitizer stack trace. Other than this, we
     didn\'t encounter any major technical difficulty.
--   For me the most difficult part was to wait for Atakan to push his
+-   For me, the most difficult part was to wait for Atakan to push his
     task. Most probably, I am just very impatient. (Yusuf)
 
 **Q:** How to get a pdf version of the README.md ?
