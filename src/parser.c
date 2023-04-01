@@ -1,6 +1,6 @@
 
-#include "../include/debug.h"
-#include "../include/parser.h"
+#include "debug.h"
+#include "parser.h"
 #include <string.h>
 
 #undef DEBUG

@@ -1,8 +1,8 @@
 #ifndef EXECUTOR_H
 #define EXECUTOR_H
 
-#include "../include/parser.h"
-#include "../include/dictionary.h"
+#include "parser.h"
+#include "dictionary.h"
 /*
  * This function executes the statetement given as a input string, and writes the output to the output string.
  * return value represents the status of the execution.

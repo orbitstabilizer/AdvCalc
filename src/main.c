@@ -2,8 +2,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h> 
-#include "../include/executor.h"
-#include "../include/debug.h"
+#include "executor.h"
+#include "debug.h"
 
 
 #define BUFFER_SIZE 256

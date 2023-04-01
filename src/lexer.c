@@ -1,5 +1,5 @@
-#include "../include/lexer.h"
-#include "../include/debug.h"/*
+#include "lexer.h"
+#include "debug.h"/*
  * Parse a long from a string
  * str: string to parse
  * val: pointer to long to store value

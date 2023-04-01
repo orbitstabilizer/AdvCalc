@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../include/dictionary.h"
+#include "dictionary.h"
 static Chain *put(Dictionary* dict, char *name, long value);
 static Chain *get(Dictionary* dict, char *s);
 

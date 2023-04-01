@@ -1,13 +1,13 @@
 
-#include "../include/executor.h"
-#include "../include/debug.h"
-#include "../include/dictionary.h"
-#include "../include/lexer.h"
-#include "../include/parser.h"
+#include "executor.h"
+#include "debug.h"
+#include "dictionary.h"
+#include "lexer.h"
+#include "parser.h"
 
 
 
-static long str_to_long(char *str);
+// static long str_to_long(char *str);
 static long add(long a, long b);
 static long sub(long a, long b);
 static long mul(long a, long b);
@@ -86,12 +86,12 @@ long paran(long a, long null) {
   return a;
 }
 
-long str_to_long(char *str) {
+/* long str_to_long(char *str) {
   if (str == NULL) {
     return 0;
   }
   return atol(str);
-}
+} */
 
 long eval_util(SyntaxNode *parent, Dictionary *dict, bool *error) {
   if (*error || parent == NULL || parent->type == ERROR)
